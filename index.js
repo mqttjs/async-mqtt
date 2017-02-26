@@ -2,9 +2,27 @@
 var mqtt = require("mqtt");
 var inArray = require("in-array");
 
-var RegularClientPrototype = mqtt.client;
+var RegularClientPrototype = mqtt.MqttClient.prototype;
 
-var ASYNC_METHODS = ["publish", "subscribe", "unsubscribe", "unsubscribe", "end"];
+var ASYNC_METHODS = ["publish",
+	"subscribe",
+	"unsubscribe",
+	"unsubscribe",
+	"end"
+];
+
+var SYNC_METHODS = [
+	"emit",
+	"addListener",
+	"on",
+	"once",
+	"removeListener",
+	"removeAllListeners",
+	"setMaxListeners",
+	"getMaxListeners",
+	"listeners",
+	"listenerCount"
+];
 
 module.exports = {
 	connect: connect,
@@ -32,11 +50,8 @@ AsyncClient.prototype = {
 	}
 };
 
-for (var name in RegularClientPrototype) {
-	if (inArray(ASYNC_METHODS, name))
-		defineAsync(name);
-	else definePassthrough(name);
-}
+ASYNC_METHODS.forEach(defineAsync);
+SYNC_METHODS.forEach(definePassthrough);
 
 function definePassthrough(name) {
 	AsyncClient.prototype[name] = function() {
@@ -56,7 +71,7 @@ function defineAsync(name) {
 
 		return new Promise(function(resolve, reject) {
 			args.push(makeCallback(resolve, reject));
-			client.apply(client, args);
+			client[name].apply(client, args);
 		});
 	};
 }

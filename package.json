@@ -26,5 +26,9 @@
   "dependencies": {
     "in-array": "^0.1.2",
     "mqtt": "^2.3.1"
+  },
+  "devDependencies": {
+    "mqtt-connection": "^3.0.0",
+    "tape": "^4.6.3"
   }
 }
