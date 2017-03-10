@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RangerMauve/async-mqtt.git"
+    "url": "git+https://github.com/mqttjs/async-mqtt.git"
   },
   "keywords": [
     "mqtt",
@@ -20,9 +20,9 @@
   "author": "rangermauve",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RangerMauve/async-mqtt/issues"
+    "url": "https://github.com/mqttjs/async-mqtt/issues"
   },
-  "homepage": "https://github.com/RangerMauve/async-mqtt#readme",
+  "homepage": "https://github.com/mqttjs/async-mqtt#readme",
   "dependencies": {
     "in-array": "^0.1.2",
     "mqtt": "^2.3.1"
