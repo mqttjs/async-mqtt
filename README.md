@@ -2,7 +2,7 @@
 
 Promise wrapper over MQTT.js
 
-**IMPORANT: Make sure you handle rejections from returned promises because they won't crash the process**
+**IMPORTANT: Make sure you handle rejections from returned promises because they won't crash the process**
 
 ## API
 
