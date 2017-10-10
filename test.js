@@ -21,7 +21,6 @@ function runTests () {
     var client = AsyncMQTT.connect(SERVER_URL);
 
     t.ok(client instanceof AsyncClient, 'Connect returned an AsyncClient');
-
     client.end();
   });
 
