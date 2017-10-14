@@ -1,6 +1,20 @@
-# async-mqtt
-
-Promise wrapper over MQTT.js
+<h1 align="center">async-mqtt</h1>
+<p align="center">Promise wrapper over MQTT.js</p>
+<p align="center">
+<a href="https://github.com/mqttjs/async-mqtt">
+    <img alt="" src="https://david-dm.org/mqttjs/async-mqtt.svg?style=flat-square">
+</a>
+<a href="https://www.npmjs.com/package/async-mqtt">
+    <img alt="" src="https://img.shields.io/npm/dt/async-mqtt.svg?style=flat-square">
+</a>
+<a href="https://www.npmjs.com/package/async-mqtt">
+    <img alt="" src="https://img.shields.io/npm/v/async-mqtt.svg?style=flat-square">
+</a>
+<br>
+<a href="https://github.com/mqttjs/async-mqtt">
+    <img alt="" src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square">
+</a>
+</p>
 
 **IMPORTANT: Make sure you handle rejections from returned promises because they won't crash the process**
 
