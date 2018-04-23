@@ -35,7 +35,7 @@ var MQTT = require("async-mqtt");
 
 var client = MQTT.connect("tcp://somehost.com:1883");
 
-// WHen passing async functions as event listeners, make sure to have a try catch block
+// When passing async functions as event listeners, make sure to have a try catch block
 client.on("connect", doStuff);
 
 async function doStuff() {
