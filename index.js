@@ -7,7 +7,6 @@ var RegularClientPrototype = mqtt.MqttClient.prototype;
 var ASYNC_METHODS = ['publish',
   'subscribe',
   'unsubscribe',
-  'unsubscribe',
   'end'
 ];
 
