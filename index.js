@@ -11,16 +11,21 @@ var ASYNC_METHODS = ['publish',
 ];
 
 var SYNC_METHODS = [
-  'emit',
   'addListener',
+  'emit',
+  'eventNames',
+  'getMaxListeners',
+  'listenerCount',
+  'listeners',
+  'off',
   'on',
   'once',
-  'removeListener',
+  'prependListener',
+  'prependOnceListener',
   'removeAllListeners',
+  'removeListener',
   'setMaxListeners',
-  'getMaxListeners',
-  'listeners',
-  'listenerCount'
+  'rawListeners'
 ];
 
 module.exports = {
