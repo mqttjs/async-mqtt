@@ -70,4 +70,3 @@ export declare class AsyncMqttClient extends MqttClient {
 export declare function connect (brokerUrl?: string | any, opts?: IClientOptions): AsyncMqttClient
 
 export { AsyncMqttClient as AsyncClient }
-
