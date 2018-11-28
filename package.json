@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Promise wrapper over MQTT.js",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,6 +29,7 @@
     "mqtt": "^2.3.1"
   },
   "devDependencies": {
+    "@types/node": "^8.10.21",
     "eslint": "^4.8.0",
     "mqtt-connection": "^3.0.0",
     "tape": "^4.6.3"
