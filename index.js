@@ -1,89 +1,103 @@
-'use strict';
-var mqtt = require('mqtt');
-var inArray = require('in-array');
+const mqtt = require('mqtt');
+const RegularClientPrototype = mqtt.MqttClient.prototype;
 
-var RegularClientPrototype = mqtt.MqttClient.prototype;
+class AsyncClient {
+  constructor(client) {
+    this.client = client
+  }
 
-var ASYNC_METHODS = ['publish',
-  'subscribe',
-  'unsubscribe',
-  'end'
-];
+  set handleMessage(newHandler) {
+    this.client.handleMessage = newHandler;
+  }
 
-var SYNC_METHODS = [
-  'addListener',
-  'emit',
-  'eventNames',
-  'getMaxListeners',
-  'listenerCount',
-  'listeners',
-  'off',
-  'on',
-  'once',
-  'prependListener',
-  'prependOnceListener',
-  'removeAllListeners',
-  'removeListener',
-  'setMaxListeners',
-  'rawListeners'
-];
+  get handleMessage() {
+    return this.client.handleMessage;
+  }
 
-module.exports = {
-  connect: connect,
-  AsyncClient: AsyncClient
-};
+  publish(...args) {
+    return Promise.resolve(this.client.publish(...args))
+  }
+  
+  subscribe(...args) {
+    return Promise.resolve(this.client.subscribe(...args))
+  }
+  
+  unsubscribe(...args) {
+    return Promise.resolve(this.client.unsubscribe(...args))
+  }
 
-function connect (brokerURL, opts) {
-  var client = mqtt.connect(brokerURL, opts);
+  end(...args) {
+    return Promise.resolve(this.client.end(...args))
+  }
 
-  var asyncClient = new AsyncClient(client);
+  addListener(...args) {
+    this.client.addListener(...args);
+  }
 
-  return asyncClient;
-}
+  emit(...args) {
+    this.client.emit(...args);
+  }
 
-function AsyncClient (client) {
-  this._client = client;
-}
+  eventNames(...args) {
+    this.client.eventNames(...args);
+  }
 
-AsyncClient.prototype = {
-  set handleMessage (newHandler) {
-    this._client.handleMessage = newHandler;
-  },
-  get handleMessage () {
-    return this._client.handleMessage;
+  getMaxListeners(...args) {
+    this.client.getMaxListeners(...args);
+  }
+
+  listenerCount(...args) {
+    this.client.listenerCount(...args);
+  }
+
+  listeners(...args) {
+    this.client.listeners(...args);
+  }
+
+  off(...args) {
+    this.client.off(...args);
+  }
+
+  on(...args) {
+    this.client.on(...args);
+  }
+
+  once(...args) {
+    this.client.once(...args);
+  }
+
+  prependListener(...args) {
+    this.client.prependListener(...args);
+  }
+
+  prependOnceListener(...args) {
+    this.client.prependOnceListener(...args);
+  }
+
+  removeAllListeners(...args) {
+    this.client.removeAllListeners(...args);
+  }
+
+  removeListener(...args) {
+    this.client.removeListener(...args);
+  }
+
+  setMaxListeners(...args) {
+    this.client.setMaxListeners(...args);
+  }
+
+  rawListeners(...args) {
+    this.client.rawListeners(...args);
   }
 };
 
-ASYNC_METHODS.forEach(defineAsync);
-SYNC_METHODS.forEach(definePassthrough);
-
-function definePassthrough (name) {
-  AsyncClient.prototype[name] = function () {
-    var client = this._client;
-    return client[name].apply(client, arguments);
-  };
+const connect = (brokerUrl, opts = {}) => {
+  const client = mqtt.connect(brokerUrl, opts);
+  const asyncClient = new AsyncClient(client);
+  return asyncClient
 }
 
-function defineAsync (name) {
-  AsyncClient.prototype[name] = function asyncMethod () {
-    var client = this._client;
-    var args = [];
-    var length = arguments.length;
-    var i = 0;
-    for (i; i < length; i++)
-      args.push(arguments[i]);
-
-    return new Promise(function (resolve, reject) {
-      args.push(makeCallback(resolve, reject));
-      client[name].apply(client, args);
-    });
-  };
-}
-
-function makeCallback (resolve, reject) {
-  return function (err, data) {
-    if (err)
-      reject(err);
-    else resolve(data);
-  };
+module.exports = {
+  connect,
+  AsyncClient
 }

@@ -1,93 +1,89 @@
-'use strict';
+const Server = require('mqtt/test/server');
 
-var Server = require('mqtt/test/server');
+const AsyncMQTT = require('./');
+const AsyncClient = AsyncMQTT.AsyncClient;
 
-var AsyncMQTT = require('./');
-var AsyncClient = AsyncMQTT.AsyncClient;
+const test = require('tape');
 
-var test = require('tape');
+const SERVER_PORT = 1883;
+const SERVER_URL = `mqtt://localhost:${SERVER_PORT}`;
 
-var SERVER_PORT = 1883;
-var SERVER_URL = 'mqtt://localhost:' + SERVER_PORT;
-
-var server = buildServer().listen(SERVER_PORT);
+const server = buildServer().listen(SERVER_PORT);
 server.unref();
 
 server.on('listening', runTests);
 
 function runTests () {
-  test('Connect should return an instance of AsyncClient', function (t) {
+  test('Connect should return an instance of AsyncClient', t => {
     t.plan(1);
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
     t.ok(client instanceof AsyncClient, 'Connect returned an AsyncClient');
     client.end();
   });
 
-  test('Should be able to listen on event on client', function (t) {
+  test('Should be able to listen on event on client', t => {
     t.plan(1);
 
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
-    client.once('connect', function () {
+    client.once('connect', () => {
       t.pass('Connected');
       client.end();
     });
   });
 
-  test('Calling end() should resolve once disconnected', function (t) {
+  test('Calling end() should resolve once disconnected', t => {
     t.plan(2);
 
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
-    client.on('close', function () {
+    client.on('close', () => {
       t.pass('Close event occured');
     });
 
-    client.on('connect', function () {
+    client.on('connect', () => {
       // Wait for connect to emit before ending
-      client.end().then(function () {
+      client.end().then(() => {
         t.pass('End resolved');
       });
     });
   });
 
-  test('Calling subscribe should resolve once subscribed', function (t) {
+  test('Calling subscribe should resolve once subscribed', t => {
     t.plan(1);
 
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
     client.subscribe('example', {
       qos: 1
-    }).then(function () {
+    }).then(() => {
       t.pass('Subscribed');
       client.end();
     })
   });
 
-  test('Calling unsubscribe should resolve once completed', function (t) {
+  test('Calling unsubscribe should resolve once completed', t => {
     t.plan(1);
 
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
     client.subscribe('example', {
       qos: 1
-    }).then(function () {
-      return client.unsubscribe('example');
-    }).then(function () {
+    }).then(() => client.unsubscribe('example')).then(() => {
       t.pass('Unsunbscribed');
       return client.end();
     });
   });
 
-  test('Calling publish should resolve once completed', function (t) {
+  test('Calling publish should resolve once completed', t => {
     t.plan(1);
 
-    var client = AsyncMQTT.connect(SERVER_URL);
+    const client = AsyncMQTT.connect(SERVER_URL);
 
     client.publish('example', 'test', {
       qos: 1
-    }).then(function () {
+    }).then(() => {
       t.pass('Published');
       return client.end();
     });
@@ -96,17 +92,17 @@ function runTests () {
 
 // Taken from MQTT.js tests
 function buildServer () {
-  return new Server(function (client) {
-    client.on('connect', function (packet) {
-      if ('invalid' === packet.clientId) {
+  return new Server(client => {
+    client.on('connect', ({clientId}) => {
+      if ('invalid' === clientId) {
         client.connack({returnCode: 2})
       } else {
         client.connack({returnCode: 0})
       }
     })
 
-    client.on('publish', function (packet) {
-      setImmediate(function () {
+    client.on('publish', packet => {
+      setImmediate(() => {
         switch (packet.qos) {
           case 0:
             break
@@ -122,33 +118,31 @@ function buildServer () {
       })
     })
 
-    client.on('pubrel', function (packet) {
+    client.on('pubrel', packet => {
       client.pubcomp(packet)
     })
 
-    client.on('pubrec', function (packet) {
+    client.on('pubrec', packet => {
       client.pubrel(packet)
     })
 
-    client.on('pubcomp', function () {
+    client.on('pubcomp', () => {
       // Nothing to be done
     })
 
-    client.on('subscribe', function (packet) {
+    client.on('subscribe', ({messageId, subscriptions}) => {
       client.suback({
-        messageId: packet.messageId,
-        granted: packet.subscriptions.map(function (e) {
-          return e.qos
-        })
+        messageId: messageId,
+        granted: subscriptions.map(({qos}) => qos)
       })
     })
 
-    client.on('unsubscribe', function (packet) {
+    client.on('unsubscribe', packet => {
       client.unsuback(packet)
     })
 
-    client.on('pingreq', function () {
+    client.on('pingreq', () => {
       client.pingresp()
     })
-  })
+  });
 }
