@@ -132,7 +132,7 @@ function buildServer () {
 
     client.on('subscribe', ({messageId, subscriptions}) => {
       client.suback({
-        messageId: messageId,
+        messageId,
         granted: subscriptions.map(({qos}) => qos)
       })
     })

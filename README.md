@@ -31,14 +31,13 @@ The API is the same as [MQTT.js](https://github.com/mqttjs/MQTT.js#api), except 
 ## Example
 
 ```javascript
-var MQTT = require("async-mqtt");
+const MQTT = require("async-mqtt");
 
-var client = MQTT.connect("tcp://somehost.com:1883");
+const client = MQTT.connect("tcp://somehost.com:1883");
 
 // When passing async functions as event listeners, make sure to have a try catch block
-client.on("connect", doStuff);
 
-async function doStuff() {
+const doStuff = async () => {
 
 	console.log("Starting");
 	try {
@@ -53,18 +52,20 @@ async function doStuff() {
 		process.exit();
 	}
 }
+
+client.on("connect", doStuff);
 ```
 
 ## Wrapping existing client
 
 ```javascript
-var AsyncClient = require("async-mqtt").AsyncClient;
+const { AsyncClient } = require("async-mqtt");
 
-var client = getRegularMQTTClientFromSomewhere();
+const client = getRegularMQTTClientFromSomewhere();
 
-var asyncClient = new AsyncClient(client);
+const asyncClient = new AsyncClient(client);
 
-asyncClient.publish("foo/bar", "baz").then(function(){
+asyncClient.publish("foo/bar", "baz").then(() => {
 	console.log("We async now");
 	return asyncClient.end();
 });

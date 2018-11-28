@@ -1,4 +1,5 @@
 const mqtt = require('mqtt');
+
 const RegularClientPrototype = mqtt.MqttClient.prototype;
 
 class AsyncClient {
