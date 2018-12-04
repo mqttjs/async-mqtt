@@ -1,104 +1,106 @@
+'use strict'
+
 const mqtt = require('mqtt');
 
 const RegularClientPrototype = mqtt.MqttClient.prototype;
 
 class AsyncClient {
-  constructor(client) {
-    this.client = client
+  constructor (client) {
+    this._client = client;
   }
 
-  set handleMessage(newHandler) {
-    this.client.handleMessage = newHandler;
+  set handleMessage (newHandler) {
+    this._client.handleMessage = newHandler;
   }
 
-  get handleMessage() {
-    return this.client.handleMessage;
+  get handleMessage () {
+    return this._client.handleMessage;
   }
 
-  publish(...args) {
-    return Promise.resolve(this.client.publish(...args))
-  }
-  
-  subscribe(...args) {
-    return Promise.resolve(this.client.subscribe(...args))
-  }
-  
-  unsubscribe(...args) {
-    return Promise.resolve(this.client.unsubscribe(...args))
+  async publish (...args) {
+    return this._client.publish(...args);
   }
 
-  end(...args) {
-    return Promise.resolve(this.client.end(...args))
+  async subscribe (...args) {
+    return this._client.subscribe(...args)
   }
 
-  addListener(...args) {
-    this.client.addListener(...args);
+  async unsubscribe (...args) {
+    return this._client.unsubscribe(...args);
   }
 
-  emit(...args) {
-    this.client.emit(...args);
+  async end (...args) {
+    return this._client.end(...args);
   }
 
-  eventNames(...args) {
-    this.client.eventNames(...args);
+  addListener (...args) {
+    return this._client.addListener(...args);
   }
 
-  getMaxListeners(...args) {
-    this.client.getMaxListeners(...args);
+  emit (...args) {
+    return this._client.emit(...args);
   }
 
-  listenerCount(...args) {
-    this.client.listenerCount(...args);
+  eventNames (...args) {
+    return this._client.eventNames(...args);
   }
 
-  listeners(...args) {
-    this.client.listeners(...args);
+  getMaxListeners (...args) {
+    return this._client.getMaxListeners(...args);
   }
 
-  off(...args) {
-    this.client.off(...args);
+  listenerCount (...args) {
+    return this._client.listenerCount(...args);
   }
 
-  on(...args) {
-    this.client.on(...args);
+  listeners (...args) {
+    return this._client.listeners(...args);
   }
 
-  once(...args) {
-    this.client.once(...args);
+  off (...args) {
+    return this._client.off(...args);
   }
 
-  prependListener(...args) {
-    this.client.prependListener(...args);
+  on (...args) {
+    return this._client.on(...args);
   }
 
-  prependOnceListener(...args) {
-    this.client.prependOnceListener(...args);
+  once (...args) {
+    return this._client.once(...args);
   }
 
-  removeAllListeners(...args) {
-    this.client.removeAllListeners(...args);
+  prependListener (...args) {
+    return this._client.prependListener(...args);
   }
 
-  removeListener(...args) {
-    this.client.removeListener(...args);
+  prependOnceListener (...args) {
+    return this._client.prependOnceListener(...args);
   }
 
-  setMaxListeners(...args) {
-    this.client.setMaxListeners(...args);
+  removeAllListeners (...args) {
+    return this._client.removeAllListeners(...args);
   }
 
-  rawListeners(...args) {
-    this.client.rawListeners(...args);
+  removeListener (...args) {
+    return this._client.removeListener(...args);
   }
-};
 
-const connect = (brokerUrl, opts = {}) => {
-  const client = mqtt.connect(brokerUrl, opts);
-  const asyncClient = new AsyncClient(client);
-  return asyncClient
+  setMaxListeners (...args) {
+    return this._client.setMaxListeners(...args);
+  }
+
+  rawListeners (...args) {
+    return this._client.rawListeners(...args);
+  }
 }
+
 
 module.exports = {
-  connect,
+  connect (brokerURL, opts) {
+    const client = mqtt.connect(brokerURL, opts);
+    const asyncClient = new AsyncClient(client);
+  
+    return asyncClient;
+  },
   AsyncClient
-}
+};
