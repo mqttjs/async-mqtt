@@ -17,20 +17,40 @@ class AsyncClient {
     return this._client.handleMessage;
   }
 
-  async publish (...args) {
-    return this._client.publish(...args);
+  publish (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.publish(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
   }
 
-  async subscribe (...args) {
-    return this._client.subscribe(...args)
+  subscribe (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.subscribe(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
   }
 
-  async unsubscribe (...args) {
-    return this._client.unsubscribe(...args);
+  unsubscribe (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.unsubscribe(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
   }
 
-  async end (...args) {
-    return this._client.end(...args);
+  end (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.end(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
   }
 
   addListener (...args) {
