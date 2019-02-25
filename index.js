@@ -1,89 +1,126 @@
-'use strict';
-var mqtt = require('mqtt');
-var inArray = require('in-array');
+'use strict'
 
-var RegularClientPrototype = mqtt.MqttClient.prototype;
+const mqtt = require('mqtt');
 
-var ASYNC_METHODS = ['publish',
-  'subscribe',
-  'unsubscribe',
-  'end'
-];
+const RegularClientPrototype = mqtt.MqttClient.prototype;
 
-var SYNC_METHODS = [
-  'addListener',
-  'emit',
-  'eventNames',
-  'getMaxListeners',
-  'listenerCount',
-  'listeners',
-  'off',
-  'on',
-  'once',
-  'prependListener',
-  'prependOnceListener',
-  'removeAllListeners',
-  'removeListener',
-  'setMaxListeners',
-  'rawListeners'
-];
+class AsyncClient {
+  constructor (client) {
+    this._client = client;
+  }
 
-module.exports = {
-  connect: connect,
-  AsyncClient: AsyncClient
-};
-
-function connect (brokerURL, opts) {
-  var client = mqtt.connect(brokerURL, opts);
-
-  var asyncClient = new AsyncClient(client);
-
-  return asyncClient;
-}
-
-function AsyncClient (client) {
-  this._client = client;
-}
-
-AsyncClient.prototype = {
   set handleMessage (newHandler) {
     this._client.handleMessage = newHandler;
-  },
+  }
+
   get handleMessage () {
     return this._client.handleMessage;
   }
+
+  publish (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.publish(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
+  }
+
+  subscribe (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.subscribe(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
+  }
+
+  unsubscribe (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.unsubscribe(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
+  }
+
+  end (...args) {
+    return new Promise((resolve, reject) => {
+      this._client.end(...args, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
+  }
+
+  addListener (...args) {
+    return this._client.addListener(...args);
+  }
+
+  emit (...args) {
+    return this._client.emit(...args);
+  }
+
+  eventNames (...args) {
+    return this._client.eventNames(...args);
+  }
+
+  getMaxListeners (...args) {
+    return this._client.getMaxListeners(...args);
+  }
+
+  listenerCount (...args) {
+    return this._client.listenerCount(...args);
+  }
+
+  listeners (...args) {
+    return this._client.listeners(...args);
+  }
+
+  off (...args) {
+    return this._client.off(...args);
+  }
+
+  on (...args) {
+    return this._client.on(...args);
+  }
+
+  once (...args) {
+    return this._client.once(...args);
+  }
+
+  prependListener (...args) {
+    return this._client.prependListener(...args);
+  }
+
+  prependOnceListener (...args) {
+    return this._client.prependOnceListener(...args);
+  }
+
+  removeAllListeners (...args) {
+    return this._client.removeAllListeners(...args);
+  }
+
+  removeListener (...args) {
+    return this._client.removeListener(...args);
+  }
+
+  setMaxListeners (...args) {
+    return this._client.setMaxListeners(...args);
+  }
+
+  rawListeners (...args) {
+    return this._client.rawListeners(...args);
+  }
+}
+
+
+module.exports = {
+  connect (brokerURL, opts) {
+    const client = mqtt.connect(brokerURL, opts);
+    const asyncClient = new AsyncClient(client);
+  
+    return asyncClient;
+  },
+  AsyncClient
 };
-
-ASYNC_METHODS.forEach(defineAsync);
-SYNC_METHODS.forEach(definePassthrough);
-
-function definePassthrough (name) {
-  AsyncClient.prototype[name] = function () {
-    var client = this._client;
-    return client[name].apply(client, arguments);
-  };
-}
-
-function defineAsync (name) {
-  AsyncClient.prototype[name] = function asyncMethod () {
-    var client = this._client;
-    var args = [];
-    var length = arguments.length;
-    var i = 0;
-    for (i; i < length; i++)
-      args.push(arguments[i]);
-
-    return new Promise(function (resolve, reject) {
-      args.push(makeCallback(resolve, reject));
-      client[name].apply(client, args);
-    });
-  };
-}
-
-function makeCallback (resolve, reject) {
-  return function (err, data) {
-    if (err)
-      reject(err);
-    else resolve(data);
-  };
-}

@@ -1,9 +1,15 @@
 {
   "env": {
+    "es6": true,
     "browser": true,
     "node": true,
     "mocha": true
   },
+
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+
   "rules": {
     "quotes": [
       1,
@@ -21,7 +27,9 @@
     "indent": [
       2,
       2,
-      {"SwitchCase": 1}
+      {
+        "SwitchCase": 1
+      }
     ],
     "brace-style": [
       2,
@@ -46,8 +54,10 @@
       "always"
     ],
     "keyword-spacing": [
-        2,
-        {"after": true}
+      2,
+      {
+        "after": true
+      }
     ],
     "space-before-blocks": 2,
     "spaced-comment": [
@@ -59,9 +69,9 @@
         ],
         "markers": [
           "eslint",
-	  "jshint",
+          "jshint",
           "global"
-         ]
+        ]
       }
     ],
     "strict": [

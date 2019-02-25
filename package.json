@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/mqttjs/async-mqtt#readme",
   "dependencies": {
-    "in-array": "^0.1.2",
     "mqtt": "^2.3.1"
   },
   "devDependencies": {
