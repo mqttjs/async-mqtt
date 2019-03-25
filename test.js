@@ -21,7 +21,10 @@ function runTests () {
     const client = AsyncMQTT.connect(SERVER_URL);
 
     t.ok(client instanceof AsyncClient, 'Connect returned an AsyncClient');
-    client.end();
+
+    client.on('connect', () => {
+      client.end();
+    })
   });
 
   test('Should be able to listen on event on client', t => {
