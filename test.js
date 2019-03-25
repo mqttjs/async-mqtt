@@ -1,3 +1,5 @@
+'use strict'
+
 const Server = require('mqtt/test/server');
 
 const AsyncMQTT = require('./');
@@ -29,6 +31,17 @@ function runTests () {
 
     client.once('connect', () => {
       t.pass('Connected');
+      client.end();
+    });
+  });
+
+  test('client.connected should be true', t => {
+    t.plan(1);
+
+    const client = AsyncMQTT.connect(SERVER_URL);
+
+    client.once('connect', () => {
+      t.equal(client.connected, true)
       client.end();
     });
   });
