@@ -17,6 +17,10 @@ class AsyncClient {
     return this._client.handleMessage;
   }
 
+  get connected () {
+    return this._client.connected;
+  }
+
   publish (...args) {
     return new Promise((resolve, reject) => {
       this._client.publish(...args, (err, result) => {
