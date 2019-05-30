@@ -9,16 +9,12 @@ class AsyncClient {
     this._client = client;
   }
 
-  set handleMessage (newHandler) {
-    this._client.handleMessage = newHandler;
-  }
-
-  get handleMessage () {
-    return this._client.handleMessage;
-  }
-
   get connected () {
     return this._client.connected;
+  }
+
+  get reconnecting () {
+    return this._client.reconnecting;
   }
 
   publish (...args) {
@@ -69,8 +65,16 @@ class AsyncClient {
     return this._client.eventNames(...args);
   }
 
+  getLastMessageId (...args) {
+    return this._client.getLastMessageId(...args);
+  }
+
   getMaxListeners (...args) {
     return this._client.getMaxListeners(...args);
+  }
+
+  handleMessage (...args) {
+    return this._client.handleMessage(...args);
   }
 
   listenerCount (...args) {
@@ -101,6 +105,10 @@ class AsyncClient {
     return this._client.prependOnceListener(...args);
   }
 
+  rawListeners (...args) {
+    return this._client.rawListeners(...args);
+  }
+
   removeAllListeners (...args) {
     return this._client.removeAllListeners(...args);
   }
@@ -109,13 +117,14 @@ class AsyncClient {
     return this._client.removeListener(...args);
   }
 
+  removeOutgoingMessage (...args) {
+    return this._client.removeOutgoingMessage(...args);
+  }
+
   setMaxListeners (...args) {
     return this._client.setMaxListeners(...args);
   }
 
-  rawListeners (...args) {
-    return this._client.rawListeners(...args);
-  }
 }
 
 
