@@ -21,6 +21,10 @@ class AsyncClient {
     return this._client.connected;
   }
 
+  get reconnecting () {
+    return this._client.reconnecting;
+  }
+
   publish (...args) {
     return new Promise((resolve, reject) => {
       this._client.publish(...args, (err, result) => {
@@ -69,6 +73,10 @@ class AsyncClient {
     return this._client.eventNames(...args);
   }
 
+  getLastMessageId (...args) {
+    return this._client.getLastMessageId(...args);
+  }
+
   getMaxListeners (...args) {
     return this._client.getMaxListeners(...args);
   }
@@ -101,6 +109,10 @@ class AsyncClient {
     return this._client.prependOnceListener(...args);
   }
 
+  rawListeners (...args) {
+    return this._client.rawListeners(...args);
+  }
+
   removeAllListeners (...args) {
     return this._client.removeAllListeners(...args);
   }
@@ -109,13 +121,14 @@ class AsyncClient {
     return this._client.removeListener(...args);
   }
 
+  removeOutgoingMessage (...args) {
+    return this._client.removeOutgoingMessage(...args);
+  }
+
   setMaxListeners (...args) {
     return this._client.setMaxListeners(...args);
   }
 
-  rawListeners (...args) {
-    return this._client.rawListeners(...args);
-  }
 }
 
 

@@ -104,6 +104,19 @@ function runTests () {
       return client.end();
     });
   });
+
+  test('Calling getLastMessageId should return number after published', t => {
+    t.plan(1);
+
+    const client = AsyncMQTT.connect(SERVER_URL);
+
+    client.publish('example', 'test', {
+      qos: 1
+    }).then(() => {
+      t.ok('number' === typeof client.getLastMessageId(), 'Message id is number');
+      return client.end();
+    });
+  });
 }
 
 // Taken from MQTT.js tests
