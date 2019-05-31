@@ -9,6 +9,14 @@ class AsyncClient {
     this._client = client;
   }
 
+  set handleMessage (newHandler) {
+    this._client.handleMessage = newHandler;
+  }
+
+  get handleMessage () {
+    return this._client.handleMessage;
+  }
+
   get connected () {
     return this._client.connected;
   }
@@ -71,10 +79,6 @@ class AsyncClient {
 
   getMaxListeners (...args) {
     return this._client.getMaxListeners(...args);
-  }
-
-  handleMessage (...args) {
-    return this._client.handleMessage(...args);
   }
 
   listenerCount (...args) {
