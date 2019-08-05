@@ -27,6 +27,20 @@ function runTests () {
     })
   });
 
+  test('ConnectAsync should return AsyncClient after connection', t => {
+    t.plan(1);
+
+    AsyncMQTT.connectAsync(SERVER_URL, {}, false).then((client) => {
+      t.ok(client.connected, 'AsyncClient is connected');
+
+      client.end();
+    }, (error) => {
+      t.fail(error);
+    });
+
+
+  });
+
   test('Should be able to listen on event on client', t => {
     t.plan(1);
 
