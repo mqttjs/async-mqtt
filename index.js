@@ -139,5 +139,47 @@ module.exports = {
   
     return asyncClient;
   },
+  connectAsync (brokerURL, opts, allowRetries=true) {
+    const client = mqtt.connect(brokerURL, opts);
+    const asyncClient = new AsyncClient(client);
+
+    return new Promise((resolve, reject) => {
+      // Listeners added to client to trigger promise resolution
+      const promiseResolutionListeners = {
+        connect: (connack) => {
+          removePromiseResolutionListeners();
+          resolve(asyncClient);   // Resolve on connect
+        },
+        end: () => {
+          removePromiseResolutionListeners();
+          resolve(asyncClient);   // Resolve on end
+        },
+        error: (err) => {
+          removePromiseResolutionListeners();
+          client.end();
+          reject(err);            // Reject on error
+        }
+      };
+
+      // If retries are not allowed, reject on close
+      if (allowRetries === false) {
+        promiseResolutionListeners.close = () => {
+          promiseResolutionListeners.error("Couldn't connect to server");
+        }
+      }
+
+      // Remove listeners added to client by this promise
+      const removePromiseResolutionListeners = () => {
+        Object.keys(promiseResolutionListeners).forEach((eventName) => {
+          client.off(eventName, promiseResolutionListeners[eventName]);
+        });
+      };
+
+      // Add listeners to client
+      Object.keys(promiseResolutionListeners).forEach((eventName) => {
+        client.on(eventName, promiseResolutionListeners[eventName]);
+      });
+    });
+  },
   AsyncClient
 };
