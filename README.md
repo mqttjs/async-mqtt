@@ -56,6 +56,32 @@ const doStuff = async () => {
 client.on("connect", doStuff);
 ```
 
+Alternately you can skip the event listeners and get a promise.
+
+```js
+const MQTT = require("async-mqtt");
+
+run()
+
+async function run() {
+  const client = await MQTT.connectAsync("tcp://somehost.com:1883")
+
+  console.log("Starting");
+	try {
+		await client.publish("wow/so/cool", "It works!");
+		// This line doesn't run until the server responds to the publish
+		await client.end();
+		// This line doesn't run until the client has disconnected without error
+		console.log("Done");
+	} catch (e){
+		// Do something about it!
+		console.log(e.stack);
+		process.exit();
+	}
+}
+
+```
+
 ## Wrapping existing client
 
 ```javascript
