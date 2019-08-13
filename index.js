@@ -171,7 +171,7 @@ module.exports = {
       // Remove listeners added to client by this promise
       const removePromiseResolutionListeners = () => {
         Object.keys(promiseResolutionListeners).forEach((eventName) => {
-          client.off(eventName, promiseResolutionListeners[eventName]);
+          client.removeListener(eventName, promiseResolutionListeners[eventName]);
         });
       };
 
