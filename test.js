@@ -131,6 +131,26 @@ function runTests () {
       return client.end();
     });
   });
+
+  test('Calling reconnect after end should resolve once reconnect', t => {
+    t.plan(2);
+
+    const client = AsyncMQTT.connect(SERVER_URL);
+
+    client.once('reconnect', () => {
+      t.pass('Reconnect event occured');
+      client.once('connect', () => {
+        client.end();
+      });
+    });
+
+    client.once('connect', () => {
+      client.end().then(() => {
+        t.pass('End resolved');
+        client.reconnect();
+      });
+    });
+  });
 }
 
 // Taken from MQTT.js tests
