@@ -61,6 +61,10 @@ class AsyncClient {
     })
   }
 
+  reconnect (...args) {
+    return this._client.reconnect(...args);
+  }
+
   addListener (...args) {
     return this._client.addListener(...args);
   }
