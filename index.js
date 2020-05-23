@@ -2,8 +2,6 @@
 
 const mqtt = require('mqtt');
 
-const RegularClientPrototype = mqtt.MqttClient.prototype;
-
 class AsyncClient {
   constructor (client) {
     this._client = client;
@@ -166,14 +164,14 @@ module.exports = {
       };
 
       // If retries are not allowed, reject on close
-      if (allowRetries === false) {
+      if (false === allowRetries) {
         promiseResolutionListeners.close = () => {
-          promiseResolutionListeners.error("Couldn't connect to server");
+          promiseResolutionListeners.error('Couldn\'t connect to server');
         }
       }
 
       // Remove listeners added to client by this promise
-      const removePromiseResolutionListeners = () => {
+      function removePromiseResolutionListeners () {
         Object.keys(promiseResolutionListeners).forEach((eventName) => {
           client.removeListener(eventName, promiseResolutionListeners[eventName]);
         });
