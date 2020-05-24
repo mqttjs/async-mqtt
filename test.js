@@ -1,9 +1,29 @@
 'use strict'
 
-const Server = require('mqtt/test/server');
+const net = require('net');
+const Connection = require('mqtt-connection');
+
+class Server extends net.Server {
+  constructor (listener) {
+    super()
+    this.connectionList = []
+
+    this.on('connection', duplex => {
+      this.connectionList.push(duplex)
+      const connection = new Connection(duplex, () => {
+        this.emit('client', connection)
+      })
+    })
+
+    if (listener) {
+      this.on('client', listener)
+    }
+  }
+}
+
 
 const AsyncMQTT = require('./');
-const AsyncClient = AsyncMQTT.AsyncClient;
+const { AsyncClient } = AsyncMQTT;
 
 const test = require('tape');
 
