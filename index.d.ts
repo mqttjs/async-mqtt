@@ -3,11 +3,8 @@ import {
   IClientOptions,
   IClientPublishOptions,
   IClientSubscribeOptions,
-  IPublishPacket,
   ISubscriptionGrant,
   ISubscriptionMap,
-  IUnsubackPacket,
-  PacketCallback,
 } from 'mqtt';
 
 export * from 'mqtt/types/lib/client-options';
@@ -55,11 +52,11 @@ export declare class AsyncMqttClient extends MqttClient {
   /* original */ public subscribe (topic: string | string[], opts: IClientSubscribeOptions, callback: never): this
   /* original */ public subscribe (topic: string | string[] | ISubscriptionMap, callback: never): this
 
-  public unsubscribe (topic: string | string[]): Promise<IUnsubackPacket>
+  public unsubscribe (topic: string | string[]): Promise<void>
   /* original */ public unsubscribe (topic: string | string[], callback: never): this;
 
-  public publish (topic: string, message: string | Buffer, opts: IClientPublishOptions): Promise<IPublishPacket>
-  public publish (topic: string, message: string | Buffer): Promise<IPublishPacket>
+  public publish (topic: string, message: string | Buffer, opts: IClientPublishOptions): Promise<void>
+  public publish (topic: string, message: string | Buffer): Promise<void>
   /* original */ public publish (topic: string, message: string | Buffer, opts: IClientPublishOptions, callback: never): this
   /* original */ public publish (topic: string, message: string | Buffer, callback: never): this
 
