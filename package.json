@@ -1,6 +1,6 @@
 {
   "name": "async-mqtt",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Promise wrapper over MQTT.js",
   "main": "index.js",
   "types": "index.d.ts",
