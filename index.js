@@ -19,8 +19,64 @@ class AsyncClient {
     return this._client.connected;
   }
 
+  set connected (connectedNew) {
+    this._client.connected = connectedNew;
+  }
+
+  get disconnecting () {
+    return this._client.disconnecting;
+  }
+
+  set disconnecting (disconnectingNew) {
+    this._client.disconnecting = disconnectingNew;
+  }
+
+  get disconnected () {
+    return this._client.disconnected;
+  }
+
+  set disconnected (disconnectedNew) {
+    this._client.disconnected = disconnectedNew;
+  }
+
   get reconnecting () {
     return this._client.reconnecting;
+  }
+
+  set reconnecting (reconnectingNew) {
+    this._client.reconnecting = reconnectingNew;
+  }
+
+  get incomingStore () {
+    return this._client.incomingStore;
+  }
+
+  set incomingStore (incomingStoreNew) {
+    this._client.incomingStore = incomingStoreNew;
+  }
+
+  get outgoingStore () {
+    return this._client.outgoingStore;
+  }
+
+  set outgoingStore (outgoingStoreNew) {
+    this._client.outgoingStore = outgoingStoreNew;
+  }
+
+  get options () {
+    return this._client.options;
+  }
+
+  set options (optionsNew) {
+    this._client.options = optionsNew;
+  }
+
+  get queueQoSZero () {
+    return this._client.queueQoSZero;
+  }
+
+  set queueQoSZero (queueQoSZeroNew) {
+    this._client.queueQoSZero = queueQoSZeroNew;
   }
 
   publish (...args) {
