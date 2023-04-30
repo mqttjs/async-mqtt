@@ -158,8 +158,11 @@ module.exports = {
         },
         error: (err) => {
           removePromiseResolutionListeners();
-          client.end();
-          reject(err);            // Reject on error
+
+          const clientEndPromise = new Promise(res => client.end(true, {}, () => res(err)));
+
+          // Reject on error after client is properly closed
+          clientEndPromise.then(() => reject(err));
         }
       };
 
