@@ -23,6 +23,7 @@ export {
   // mqtt-packet
   QoS,
   PacketCmd,
+  UserProperties,
   IPacket,
   IConnectPacket,
   IPublishPacket,
